@@ -18,11 +18,14 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         body: SizedBox(
-          width: 400,
+          width: 500,
           height: 500,
           child: Doughnut(
             data: [
-              Sector(value: 60),
+              Sector(value: 50,color: Colors.red),
+              Sector(value: 10,color: Colors.orange),
+              Sector(value: 23,color: Colors.blue),
+              Sector(value: 5,color: Colors.green),
             ],
             selectedKey: "",
           ),

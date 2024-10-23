@@ -33,34 +33,8 @@ class ChartUtil {
   double get innerArcLength =>
       ((radius! - width!) * (sweepRadian - startRadian));
 
-  double percentageToRadians(double percentage) {
-    // Convert percentage to degrees
-    double degrees = percentage * pi;
-
-    return degrees;
-  }
-  double degreesToRadius(double degrees, double size) {
-    // Assuming 360 degrees correspond to the maximum possible radius,
-    // which is half of the smallest dimension of the shape.
-    double maxRadius = size / 2;
-
-    // Convert degrees to percentage, where 360 degrees is 100%
-    double percent = degrees / 360 * 100;
-
-    // Calculate final radius from the given percentage
-    return percent / 100 * maxRadius;
-  }
-
   drawRoundedArc(Path path, double percentage) {
-    double borderRadius = 40;
-
-    double maxRadius = degreesToRadius(percentage * pi,100);
-
-    print(maxRadius);
-
-    if (borderRadius > maxRadius) {
-      borderRadius = maxRadius;
-    }
+    double borderRadius = 16;
 
     final double verticalBorderRadiusValue = borderRadius;
     final double horizontalBorderRadiusValue = borderRadius / 100;
@@ -96,10 +70,11 @@ class ChartUtil {
       path.moveTo(cornerAPoint2.x.toDouble(), cornerAPoint2.y.toDouble());
 
       path.arcTo(
-          Rect.fromCircle(center: centerOffset, radius: radius!),
-          startRadian + horizontalBorderRadiusValue,
-          sweepRadian - (horizontalBorderRadiusValue * 2),
-          false);
+        Rect.fromCircle(center: centerOffset, radius: radius!),
+        startRadian + horizontalBorderRadiusValue,
+        sweepRadian - (horizontalBorderRadiusValue * 2),
+        false,
+      );
 
       final cornerBPoint = cornerB.point;
       final cornerBPoint2 =

@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'chart_util.dart';
@@ -21,50 +20,17 @@ class Doughnut extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final clipper = _PieChartClipper(data: data);
-
     return SizedBox(
       width: size,
       height: size,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          CustomPaint(
-            painter: _PieShadowPainter(clipper: clipper, shadows: [
-              BoxShadow(
-                  offset: const Offset(-3, -3),
-                  blurRadius: 10,
-                  color: Colors.white.withOpacity(.3)),
-              const BoxShadow(
-                  offset: Offset(3, 3), blurRadius: 10, color: Colors.black87),
-            ]),
-            child: SizedBox(
-                width: size,
-                height: size,
-                child: ClipPath(
-                  clipper: clipper,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFF303336),
-                          Color(0xFF222427),
-                        ],
-                      ),
-                    ),
-                  ),
-                )),
-          ),
           SizedBox(
             width: size,
             height: size,
-            child: ClipPath(
-              clipper: _PieChartClipper(
-                data: data,
-              ),
-              child: Container(color: Colors.orange),
+            child: CustomPaint(
+              painter: PieChartPainter(sectors: data),
             ),
           ),
         ],
@@ -73,29 +39,20 @@ class Doughnut extends StatelessWidget {
   }
 }
 
-class _PieChartClipper extends CustomClipper<Path> {
-  final List<Sector> data;
+class PieChartPainter extends CustomPainter {
+  final List<Sector> sectors;
 
-  final double innerPadding = .1;
-  final double outerPadding = 20;
-
-  _PieChartClipper({
-    required this.data,
+  PieChartPainter({
+    required this.sectors,
   });
 
   @override
-  Path getClip(Size size) {
+  void paint(Canvas canvas, Size size) {
     final double radius =
         ((size.width > size.height ? size.height : size.width) / 2);
     final center = Point(size.width / 2, size.height / 2);
 
-    final roundedArcRadius = radius - outerPadding;
-
-    final outerPath = Path()
-      ..addOval(
-        Rect.fromCircle(center: Offset(center.x, center.y), radius: radius),
-      )
-      ..close();
+    final roundedArcRadius = radius;
 
     ChartUtil.init(
       center: center,
@@ -103,53 +60,37 @@ class _PieChartClipper extends CustomClipper<Path> {
       width: roundedArcRadius / 1.8,
     );
 
-    final innerPath = Path();
+    double startRadian = -pi / 2;
+    for (int index = 0; index < sectors.length; index++) {
+      final innerPath = Path();
+      double value = sectors[index].value;
 
-    double start = 0;
+      double sectorRadian = (sectors[index].value / 100) * 2 * pi;
 
-    double value = data.first.value;
+      ChartUtil(
+        startRadian: startRadian,
+        sweepRadian: sectorRadian,
+      ).drawRoundedArc(innerPath, value);
 
-    double radian = (value / 100) * 2 * pi;
-    double startRadian = start + innerPadding;
-    double sweepRadian = radian;
+      final paint = Paint()..color = sectors[index].color;
+      innerPath.close();
+      final updatedPath = ChartUtil.combineWithCenterCircle(innerPath)..close();
+      canvas.drawPath(updatedPath, paint);
 
-    ChartUtil(
-      startRadian: startRadian,
-      sweepRadian: sweepRadian,
-    ).drawRoundedArc(innerPath, value);
-    innerPath.close();
-    return ChartUtil.combineWithCenterCircle(innerPath)..close();
-  }
-
-  @override
-  bool shouldReclip(CustomClipper oldClipper) => true;
-}
-
-class _PieShadowPainter extends CustomPainter {
-  final List<Shadow> shadows;
-  final CustomClipper<Path> clipper;
-
-  _PieShadowPainter({
-    required this.shadows,
-    required this.clipper,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    for (var shadow in shadows) {
-      var paint = shadow.toPaint();
-      var clipPath = clipper.getClip(size).shift(shadow.offset);
-      canvas.drawPath(clipPath, paint);
+      startRadian += sectorRadian;
     }
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => kDebugMode;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
 }
 
 class Sector {
   final Key? key;
   final double value;
+  final Color color;
 
-  Sector({this.key, required this.value});
+  Sector({this.key, required this.value, required this.color});
 }
