@@ -1,16 +1,11 @@
-# doughnut_example
+# flutter_doughnut Example Project
 
-A new Flutter project.
+This is the example project for the [flutter_doughnut](https://github.com/shihabkandil/flutter_doughnut) package. It demonstrates how to use the `flutter_doughnut` package to create a doughnut chart with customizable **border radius** for each sector. This project is intended to provide developers with a clear and concise example of how to integrate and use the package in a Flutter application.
 
-## Getting Started
+> **Note:** `flutter_doughnut` is still under development and is not yet production-ready. This example project reflects the package's current state.
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Demonstrates how to create a doughnut chart with **radius-bordered sectors**.
+- Simple and customizable example for integrating the package into any Flutter app.
+- Allows you to modify sector values, colors, and border radius.
