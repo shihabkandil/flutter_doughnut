@@ -1,39 +1,23 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Flutter Doughnut
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/shihabkandil/flutter_doughnut/blob/main/LICENSE)
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+`flutter_doughnut` is a Flutter package designed to easily create doughnut (or pie) charts with customizable **border radius** for each sector. This package aims to solve the limitation found in other packages where adding a border radius to doughnut chart sectors is not supported.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+> **Note:** This package is currently in **development** and is not yet ready for production use. Contributions are welcome!
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Create beautiful doughnut charts with sector borders.
+- Customize the **border radius** for each sector.
+- Suitable for various chart visualizations requiring smooth sector transitions.
+- Minimalistic and easy to integrate into any Flutter project.
 
-## Getting started
+## Getting Started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+To use `flutter_doughnut`, add it to your `pubspec.yaml` dependencies (once it’s published):
 
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  flutter_doughnut: ^0.0.1
 ```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
