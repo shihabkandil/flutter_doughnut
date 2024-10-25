@@ -1,21 +1,20 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 
-import 'chart_util.dart';
+import 'doughnut_painter.dart';
 
 class Doughnut extends StatelessWidget {
   final double size;
   final String selectedKey;
   final List<Sector> data;
-  final bool lowHardwareMode;
+  final double borderRadius;
 
   const Doughnut({
     Key? key,
     this.size = 300,
     required this.data,
-    this.lowHardwareMode = false,
     required this.selectedKey,
+    required this.borderRadius,
   }) : super(key: key);
 
   @override
@@ -30,7 +29,10 @@ class Doughnut extends StatelessWidget {
             width: size,
             height: size,
             child: CustomPaint(
-              painter: PieChartPainter(sectors: data),
+              painter: PieChartPainter(
+                sectors: data,
+                borderRadius: borderRadius,
+              ),
             ),
           ),
         ],
@@ -41,10 +43,9 @@ class Doughnut extends StatelessWidget {
 
 class PieChartPainter extends CustomPainter {
   final List<Sector> sectors;
+  final double borderRadius;
 
-  PieChartPainter({
-    required this.sectors,
-  });
+  PieChartPainter({required this.borderRadius, required this.sectors});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -54,27 +55,33 @@ class PieChartPainter extends CustomPainter {
 
     final roundedArcRadius = radius;
 
-    ChartUtil.init(
+    double startRadian = -pi / 2;
+
+    final doughnutPainter = DoughnutPainter(
       center: center,
-      radius: roundedArcRadius,
+      radius: radius,
       width: roundedArcRadius / 1.8,
+      borderRadius: borderRadius,
     );
 
-    double startRadian = -pi / 2;
     for (int index = 0; index < sectors.length; index++) {
       final innerPath = Path();
-      double value = sectors[index].value;
+      double sectorPercent = sectors[index].value / 100;
 
-      double sectorRadian = (sectors[index].value / 100) * 2 * pi;
+      double sectorRadian = sectorPercent * 2 * pi;
 
-      ChartUtil(
-        startRadian: startRadian,
-        sweepRadian: sectorRadian,
-      ).drawRoundedArc(innerPath, value);
+      doughnutPainter.drawRoundedArc(
+        innerPath,
+        settings: SectorSettings(
+          sweepRadian: sectorRadian,
+          startRadian: startRadian,
+        ),
+      );
 
       final paint = Paint()..color = sectors[index].color;
       innerPath.close();
-      final updatedPath = ChartUtil.combineWithCenterCircle(innerPath)..close();
+      final updatedPath = doughnutPainter.combineWithCenterCircle(innerPath)
+        ..close();
       canvas.drawPath(updatedPath, paint);
 
       startRadian += sectorRadian;
